@@ -1,0 +1,16 @@
+# compiled Python
+*.pyc
+
+# log files & nohup out
+*.log
+*.out
+
+# generic left-around json file
+*.json
+
+# temp and debug directories
+multifarm_api/json_debug
+multifarm_api/db_dumps
+
+.env
+env

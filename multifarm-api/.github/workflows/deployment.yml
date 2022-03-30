@@ -1,0 +1,69 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI-CD-Multifarm-Pipeline-AWS-ElasticBeanstalk
+
+env:
+  EB_PACKAGE_S3_BUCKET_NAME: "multifarm-flask-apiv2"
+  EB_APPLICATION_NAME: "multifarm-flask-api-beans"
+  EB_ENVIRONMENT_NAME: "Multifarmflaskapibeans-env"
+  DEPLOY_PACKAGE_NAME: "multifarm-flask-app-${{ github.sha }}.zip"
+  AWS_REGION_NAME: "eu-north-1"
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  ci_pipeline:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Git clone repository
+        uses: actions/checkout@v1
+        
+      - name: Create ZIP deployment package
+        run: zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./ -x *.git*
+        
+      - name: CI AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ env.AWS_REGION_NAME }}
+          
+      - name: Copy deployment to S3 bucket
+        run: aws s3 cp ${{ env.DEPLOY_PACKAGE_NAME }} s3://${{ env.EB_PACKAGE_S3_BUCKET_NAME}}/
+        
+      - name: CI Log completion
+        run: echo "CI Pipeline completed"
+  
+  cd_pipeline:
+    runs-on: ubuntu-latest
+    needs: [ci_pipeline]
+    if: success() && github.ref == 'refs/heads/master'
+    steps:
+      - name: CD AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ env.AWS_REGION_NAME }}
+      - name: Create Elasticbeanstalk App
+        run: |
+          aws elasticbeanstalk create-application-version \
+          --application-name ${{ env.EB_APPLICATION_NAME }} \
+          --source-bundle S3Bucket="${{ env.EB_PACKAGE_S3_BUCKET_NAME }}",S3Key="${{ env.DEPLOY_PACKAGE_NAME }}" \
+          --version-label "Ver-${{ github.sha }}" \
+          --description "CommitSHA-${{ github.sha }}"
+      - name: Deploy App to Elasticbeanstalk
+        run: aws elasticbeanstalk update-environment --environment-name ${{ env.EB_ENVIRONMENT_NAME }} --version-label "Ver-${{ github.sha }}"
+      - name: CD Log completion
+        run: echo "CI Pipeline completed"

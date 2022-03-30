@@ -1,0 +1,6 @@
+flask
+flask-cors
+flask_httpauth
+gunicorn
+pyperclip
+pymongo

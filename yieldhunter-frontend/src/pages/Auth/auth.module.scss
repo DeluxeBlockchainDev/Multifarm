@@ -1,0 +1,62 @@
+.form_wrapper {
+  width: 380px!important;
+  @media (max-width: 576px) {
+    width: 320px!important;
+  }
+
+  min-height: calc(100vh - 310px);
+  * {
+    display: block;
+    box-sizing: border-box!important
+  }
+  button {
+    width: 100%
+  }
+  h5 {
+    font-size: 1rem;
+    font-weight: 900
+  }
+  h6 {
+    font-size: 14px;
+    margin: 30px 0 10px;
+  }
+  form {
+    margin-top: 10px
+  }
+  button {
+    background: linear-gradient(111.6deg, #D733FF -2.51%, #66308B 104.46%);
+    padding: 10px;
+    border-radius: 14px;
+    font-size: 15px;
+    margin-top: 50px;
+  }
+  input {
+    background: #373D66;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 14px;
+    color: #FAFAFA;
+    padding: 20px 14px;
+    font-size:14px;
+  }
+  fieldset {
+    border-radius: 14px;
+  }
+  .MuiOutlinedInput-root {
+    border-radius: 14px;
+  }
+  a {
+    margin: 14px 0px 0;
+    font-size: 14px;
+    color: #66C8FF;
+    font-weight: 700
+  }
+  .errormsg {
+    margin-top: 15px;
+    color: rgb(255, 127, 123);
+  }
+  .form_error {
+    border: 1px solid rgb(255, 127, 123);
+    border-radius: 15px;
+    box-shadow: rgb(255, 127, 123) 0px 0px 3px 0px;
+  }
+}

@@ -1,0 +1,32 @@
+.farms_chart_wrapper {
+  background: linear-gradient(111.6deg, #303659 -2.51%, #292e4d 104.46%);
+  border-radius: 1rem;
+  padding: 0 2rem;
+  margin-bottom: 35px;
+  span {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.875rem;
+    line-height: 1.0625rem;
+    display: flex;
+    align-items: flex-end;
+    text-align: center;
+    color: #fafafa;
+    width: max-content;
+  }
+  & > span {
+    margin: 20px auto 12px;
+  }
+  p {
+    display: flex;
+    margin: 22px 0;
+    max-width: 300px;
+    justify-content: space-between;
+  }
+  .top-label {
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+}
